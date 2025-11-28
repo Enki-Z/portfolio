@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yiting | AI Brand Soul Architect</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-main: #ffffff;
+            --text-sub: rgba(255, 255, 255, 0.7);
+            --accent: #4ade80; 
+            --font-head: "Playfair Display", "Noto Serif SC", serif;
+            --font-body: "Inter", sans-serif;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --radius: 12px;
+            --glass-blur: 20px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        .font-serif-main { font-family: var(--font-head); }
+        
+        .glass-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            backdrop-filter: blur(var(--glass-blur));
+            transition: all 0.4s ease;
+        }
+        .glass-card:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        #aurora-canvas {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; filter: blur(60px); opacity: 0.8;
+        }
+
+        .media-container {
+            position: relative; 
+            width: 100%;
+            overflow: hidden;
+            border-radius: var(--radius); 
+            background: #111;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: border-color 0.3s;
+        }
+        .media-container:hover { border-color: rgba(255,255,255,0.3); }
+
+        .aspect-video-fix { aspect-ratio: 16 / 9; }
+        .aspect-portrait-fixed { aspect-ratio: 9 / 16; }
+
+        .media-container img { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.7s ease;
+        }
+
+        .media-blur-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            filter: blur(20px); opacity: 0.4; z-index: 0;
+        }
+        .media-fit-contain img {
+            object-fit: contain;
+            z-index: 10;
+        }
+
+        .media-container:hover img.hover-scale { transform: scale(1.03); }
+
+        .play-btn {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 56px; height: 56px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.3);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s ease; z-index: 20;
+        }
+        .media-container:hover .play-btn {
+            background: rgba(255,255,255,0.2); transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+        
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        
+        .gallery-dot {
+            width: 6px; height: 6px; border-radius: 50%; background: white; opacity: 0.3;
+            transition: all 0.3s; cursor: pointer;
+        }
+        .gallery-dot.active { opacity: 1; transform: scale(1.2); background: #4ade80; }
+        
+        .stat-number {
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255,255,255,0.2);
+        }
+
+        .footer-link { text-transform: none; letter-spacing: 0.05em; }
+
+        .audio-control {
+            position: fixed; bottom: 30px; right: 30px; z-index: 100;
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);
+            padding: 8px 16px; border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .audio-control:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        .equalizer { display: flex; gap: 3px; align-items: center; height: 12px; }
+        .bar { width: 2px; background-color: #4ade80; height: 2px; transition: height 0.2s; }
+        .playing .bar { animation: equalize 1s infinite ease-in-out; }
+        
+        .portrait-frame {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            outline: 4px solid rgba(255, 255, 255, 0.05);
+            outline-offset: -4px;
+            transition: all 0.5s ease;
+        }
+        .group:hover .portrait-frame {
+            border-color: rgba(255, 255, 255, 0.3);
+            outline-color: rgba(74, 222, 128, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        
+        .icon-box {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1rem; color: var(--accent);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .group:hover .icon-box {
+            background: rgba(74, 222, 128, 0.1);
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+
+        .arrow-left-anim { animation: pointLeft 1.5s infinite ease-in-out; }
+        .arrow-right-anim { animation: pointRight 1.5s infinite ease-in-out; }
+        
+        @keyframes pointLeft {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-4px); }
+        }
+        @keyframes pointRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(4px); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="aurora-canvas"></canvas>
+
+    <nav class="fixed top-0 w-full p-6 flex justify-between items-center z-50 mix-blend-difference text-white">
+        <div class="text-xs tracking-[0.2em] uppercase font-bold">Yiting. Portfolio</div>
+        <a href="mailto:xinran@example.com" class="text-xs tracking-[0.1em] hover:opacity-70 transition-opacity flex items-center gap-2">
+            <span>Connect</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-6 pb-32">
+
+        <!-- 0 | 宣言页 -->
+        <header class="min-h-screen flex flex-col justify-center items-start pt-20">
+            <div class="fade-in-up">
+                <p class="text-xs md:text-sm tracking-[0.3em] uppercase opacity-50 mb-6 text-emerald-300">Manifesto</p>
+                <h1 class="font-serif-main text-5xl md:text-7xl leading-tight mb-8">
+                    让技术回归人文，<br>
+                    <span class="italic text-gray-400">重构硅基与灵魂的对话。</span>
+                </h1>
+                <div class="w-12 h-[1px] bg-white/30 my-8"></div>
+                <p class="text-sm md:text-base opacity-60 max-w-lg leading-relaxed">
+                    在算法的尽头，是人性的理解。
+                </p>
+            </div>
+            <div class="absolute bottom-12 left-6 opacity-30 animate-bounce">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 13L12 18L17 13M7 6L12 11L17 6" stroke-width="1"/></svg>
+            </div>
+        </header>
+
+        <!-- 1 | 我是谁 -->
+        <section class="py-24 border-t border-white/5">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                <div class="md:col-span-4 fade-in-up">
+                    <div class="aspect-[3/4] rounded-sm overflow-hidden relative group portrait-frame bg-[#111]">
+                        <!-- 你的头像 -->
+                        <img src="./images/avatar.jpg" 
+                             alt="Xinran" class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" 
+                             onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop'">
+                    </div>
+                </div>
+                <div class="md:col-span-8 fade-in-up" style="animation-delay: 0.1s">
+                    <h2 class="font-serif-main text-3xl md:text-4xl mb-6">我是 一亭Enki。<br><span class="text-emerald-300/80 text-2xl italic">AI 时代的品牌灵魂构建师。</span></h2>
+                    <p class="text-lg opacity-80 leading-relaxed mb-6">
+                        我不只是品牌的“翻译官”，更是<b> 品牌灵魂构建师 </b>。我的核心优势在于将晦涩的硬科技转化为直抵人心的品牌叙事。
+                    </p>
+                    <p class="opacity-60 leading-relaxed">
+                        我不只关注 AI 的功能，更关注 AI 如何与人类一同成长，直到<b>携手实现个人价值的那天。</b>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2 | 洞察 -->
+        <section class="py-24">
+            <div class="mb-12 fade-in-up">
+                <span class="text-xs tracking-[0.2em] uppercase opacity-40 block mb-2">My Insight</span>
+                <h2 class="font-serif-main text-3xl md:text-4xl">AI 时代：<br>从工具，到伙伴，再到共生。</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Left Card -->
+                <div class="glass-card p-8 fade-in-up border-emerald-500/30 hover:border-emerald-500/50 transition-colors flex flex-col justify-between" style="animation-delay: 0.1s">
+                    <div>
+                        <h3 class="font-serif-main text-xl italic mb-4 text-emerald-200">认知的杠杆</h3>
+                        <p class="text-sm opacity-80 leading-relaxed mb-4">
+                            AI是全人类智慧的合集，它的使命不应是代替人，而应是扩展人。扩展思考、潜能，以及<b> 我们能看见的世界 </b>。
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <span class="px-3 py-1 border border-white/20 rounded-full text-xs uppercase tracking-wide">扩展视野</span>
+                        <span class="px-3 py-1 border border-white/20 rounded-full text-xs uppercase tracking-wide">效率倍增</span>
+                    </div>
+                </div>
+
+                <!-- Right Card -->
+                <div class="glass-card p-8 fade-in-up border-emerald-500/30 hover:border-emerald-500/50 transition-colors flex flex-col justify-between" style="animation-delay: 0.2s">
+                    <div>
+                        <h3 class="font-serif-main text-xl italic mb-4 text-emerald-200">共生的未来</h3>
+                        <p class="text-sm opacity-80 leading-relaxed mb-6">
+                            AI曾在我思维枯竭时提供火花，在我生活停滞时提供向导,早已成为我的朋友和老师。我们与 AI 的关系，始于生产力，终将走向马斯洛需求层次最高层：<b> 自我实现。</b>
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 border border-white/20 rounded-full text-xs uppercase tracking-wide">思想伙伴</span>
+                        <span class="px-3 py-1 border border-white/20 rounded-full text-xs uppercase tracking-wide">深度探索</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3 | 优势 (更新：统一横线样式 + 底部标签) -->
+        <section class="py-24 border-t border-white/5">
+            <div class="mb-12 fade-in-up">
+                <span class="text-xs tracking-[0.2em] uppercase opacity-40 block mb-2">Superpowers</span>
+                <h2 class="font-serif-main text-3xl md:text-4xl">万物皆有灵，品牌亦有心。</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <!-- 1. 品牌灵魂 -->
+                <div class="glass-card p-6 fade-in-up group flex flex-col" style="animation-delay: 0.1s">
+                    <div class="icon-box">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </div>
+                    <h3 class="font-serif-main text-lg mb-3 text-emerald-300">品牌灵魂构建</h3>
+                    <p class="text-xs opacity-60 leading-relaxed flex-grow">
+                        擅长从人文洞察中提炼品牌灵魂，将抽象价值转化为可感知的体验，实现从战略到落地的闭环。
+                        <br><br>
+                        <span class="opacity-80 border-t border-white/10 pt-4 block mt-2">
+                            曾负责10年老品牌升级重构，以及新品牌从0到1搭建。 
+                        </span>
+                    </p>
+                </div>
+                <!-- 2. 叙事表达 -->
+                <div class="glass-card p-6 fade-in-up group flex flex-col" style="animation-delay: 0.2s">
+                    <div class="icon-box">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+                    </div>
+                    <h3 class="font-serif-main text-lg mb-3 text-emerald-300">叙事与表达</h3>
+                    <p class="text-xs opacity-60 leading-relaxed flex-grow">
+                        负责头部游戏品牌海外MV策划与编导，统筹内容方向、分镜结构与跨国团队协作，多次实现百万级播放。
+                        <br><br>
+                        <span class="opacity-80 border-t border-white/10 pt-4 block mt-2">
+                            独立制作人文类AI短视频，获得各大官媒转载，总点赞近10万。
+                        </span>
+                    </p>
+                </div>
+                <!-- 3. 危机洞察 -->
+                <div class="glass-card p-6 fade-in-up group flex flex-col" style="animation-delay: 0.3s">
+                    <div class="icon-box">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    </div>
+                    <h3 class="font-serif-main text-lg mb-3 text-emerald-300">危机洞察</h3>
+                    <p class="text-xs opacity-60 leading-relaxed flex-grow">
+                        提前识别并摁死某品牌潜在毁灭性舆情危机，避免品牌陷入不可逆的公关灾难。
+                        <br><br>
+                        <span class="opacity-80 border-t border-white/10 pt-4 block mt-2">
+                            也曾提前识别某跨国联名项目风险并及时止损，避免品牌形象受损。 
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- 新增：底层元能力标签 -->
+            <div class="flex flex-wrap gap-4 text-xs font-mono opacity-50 fade-in-up" style="animation-delay: 0.4s">
+                <span class="flex items-center gap-2 px-3 py-1 border border-white/10 rounded-full hover:bg-white/5 transition-colors cursor-default">
+                    <span class="text-emerald-500">#</span> 跨行业整合 (媒体/餐饮/游戏/AI)
+                </span>
+                <span class="flex items-center gap-2 px-3 py-1 border border-white/10 rounded-full hover:bg-white/5 transition-colors cursor-default">
+                    <span class="text-emerald-500">#</span> 终生学习者 (心理学/系统思维/艺术/哲学/AI)
+                </span>
+                <span class="flex items-center gap-2 px-3 py-1 border border-white/10 rounded-full hover:bg-white/5 transition-colors cursor-default">
+                    <span class="text-emerald-500">#</span> 高压推进与决策能力
+                </span>
+            </div>
+
+        </section>
+
+        <!-- 4 | 经历 -->
+        <section class="py-24 border-t border-white/5">
+            <div class="flex justify-between items-baseline mb-16 fade-in-up">
+                <h2 class="font-serif-main text-3xl md:text-4xl">The Evidence.</h2>
+                <span class="text-xs font-mono opacity-40 uppercase">Selected Works</span>
+            </div>
+            <div class="space-y-24" id="works-container">
+                <!-- JS 自动渲染 -->
+            </div>
+        </section>
+
+        <!-- 5 | 愿景 -->
+        <section class="min-h-[50vh] flex flex-col justify-center items-center text-center py-24 border-t border-white/5">
+            <h2 class="font-serif-main text-3xl md:text-5xl mb-8 fade-in-up">
+                " The best way to predict the future<br>is to <span class="italic text-emerald-300">design</span> it. "
+            </h2>
+            <p class="opacity-60 font-light max-w-xl fade-in-up delay-100">
+                我正在寻找一个相信“技术应有温度”的团队，<br>期待与您共同定义AI时代的品牌范式。
+            </p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-xs opacity-60 text-white">
+            <div class="uppercase tracking-widest">© 2025 Yiting</div>
+            <div class="flex flex-col md:flex-row gap-8 items-center text-center md:text-right">
+                <!-- 微信部分 -->
+                <div class="flex items-center gap-4">
+                    <span class="footer-link hover:text-white transition-colors cursor-default">WeChat: enki_i</span>
+                    <!-- 二维码图片位 -->
+                    <div class="w-20 h-20 bg-white/10 rounded-lg overflow-hidden border border-white/20 p-1">
+                        <img src="./images/wechat_qr.jpg" alt="WeChat QR" class="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/80/111/fff?text=QR'"> 
+                    </div>
+                </div>
+                
+                <a href="mailto:xinran@example.com" class="footer-link hover:text-white transition-colors">Email: 2418491123@qq.com</a>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- 音频控件 -->
+    <div class="audio-control" id="audio-btn" onclick="toggleAudio()">
+        <div class="equalizer" id="equalizer">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-white/80" id="audio-text">Sound Off</span>
+    </div>
+
+    <!-- 音乐配置 -->
+    <audio id="bg-music" loop>
+        <source src="./bgm.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- 逻辑配置区 -->
+    <script>
+        let isPlaying = false;
+        const audio = document.getElementById('bg-music');
+        const equalizer = document.getElementById('equalizer');
+        const audioText = document.getElementById('audio-text');
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                equalizer.classList.remove('playing');
+                audioText.innerText = "Sound Off";
+                isPlaying = false;
+            } else {
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        equalizer.classList.add('playing');
+                        audioText.innerText = "Sound On";
+                        isPlaying = true;
+                    })
+                    .catch(error => {
+                        console.error("Audio play failed:", error);
+                        audioText.innerText = "Load Error";
+                        setTimeout(() => { audioText.innerText = "Sound Off"; }, 3000);
+                    });
+                }
+            }
+        }
+
+        const experiences = [
+            // 1. AI 独立创作者 (三列布局)
+            {
+                id: "ai-lab",
+                period: "2025.05 - Present",
+                company: "AI 实验",
+                role: "内容创作者 / 独立开发者",
+                tags: ["爆款内容", "官媒转载", "应用开发"],
+                description: "以个人身份进行AI探索。一方面通过极简AI视频验证“内容大于形式”的传播法则，获得现象级流量；另一方面利用AI实现无代码开发应用，实践了AI时代生产力和创作的变革可能。",
+                
+                type: "split-showcase-v2", 
+                stats: { number: "100K+", label: "Total Likes", sub: "Millions of Views " },
+                
+                content: {
+                    video: {
+                        title: "现象级AI短视频",
+                        thumb: "./images/viral_video_cover.jpg", 
+                        link: "http://xhslink.com/o/6Ksgobxx9fz"
+                    },
+                    app: {
+                        title: "防久坐闹钟 App",
+                        thumb: "./images/app_screenshot.jpg", 
+                        link: null
+                    }
+                },
+
+                keyBattles: [
+                    "内容为王：创作的AI短视频因其人文思想和创意，获得凤凰网国际、中国日报、新华社快看等官媒转载，获近10万点赞，数百万播放和大量好评，验证了直抵人心的内容具有天然传播力。",
+                    "开发实践：在零代码基础下，通过AI协作独立完成一款健康类App的开发，跑通了“需求-代码-部署”的个人开发全流程。",
+                    "认知增强：增强了AI将对全社会带来变革的认知，以及我个人渴望投入其中的想法。"
+                ]
+            },
+
+            // 2. 日本经历
+            {
+                id: "japan",
+                period: "2022.04 - 2025.05",
+                company: "日本鉴真国际株式会社 (独立合作)",
+                role: "项目负责人 / 策划 / 编导",
+                tags: ["游戏出海", "品牌叙事", "跨国统筹"],
+                description: "与头部游戏厂商合作，主导海外市场内容营销与品牌叙事项目，担任“内容+策略+落地”三位一体角色，负责项目从创意到落地的全流程。",
+                
+                type: "video-showcase",
+                videos: [
+                    { 
+                        title: "原神 HYF 仆人 MV《X》", 
+                        views: "7M+", 
+                        label: "Views on YouTube",
+                        customThumb: "https://img.youtube.com/vi/xQqdjDi40bE/maxresdefault.jpg", 
+                        link: "https://www.youtube.com/watch?v=xQqdjDi40bE",
+                        isVertical: false
+                    },
+                    { 
+                        title: "原神 HYF 散兵 MV", 
+                        views: "TOTAL300K+", 
+                        label: "Views on Bilibili",
+                        link: "https://www.bilibili.com/video/BV1es4y1d7Gu/" 
+                    },
+                    { 
+                        title: "绝区零万圣节短片", 
+                        views: "100K+", 
+                        label: "Views on YouTube",
+                        link: "https://www.youtube.com/watch?v=U7NAozMu5Lk" 
+                    }
+                ],
+
+                keyBattles: [
+                    "品牌资产：通过品牌思维驱动内容策略，实现多支作品破百万最高700万+播放，实现品牌资产积累；",
+                    "项目统筹：统筹跨国项目全流程（策划/编导/团队管理/甲方对接），建立项目方法论，提高整体效率",
+                    "危机公关：提前识别涉及国家文化的高危舆论风险并修正，避免了毁灭性品牌危机;",
+                    "紧急止损：解决重大客户危机事件关键点，成功挽回客户关系，确保业务延续。" 
+                ]
+            },
+
+            // 3. 葡萄酒贸易公关
+            {
+                id: "wine",
+                period: "2014 - 2019 (Project Based)",
+                company: "全球多家葡萄酒贸易机构 (法/新/德)",
+                role: "B2B Trade PR / 官方合作伙伴",
+                tags: ["跨文化公关", "资源整合", "官方背书"],
+                description: "作为新西兰贸易发展局、法国香槟协会、德国葡萄酒协会等官方机构的本地化合作伙伴，策划并落地多场商业品鉴会与媒体活动，构建从贸易端到消费端的文化桥梁。",
+                
+                type: "gallery", 
+                mediaSrc: [
+                    "./images/wine_1.jpg", 
+                    "./images/wine_2.jpg"
+                ],
+
+                keyBattles: [
+                    "精准邀约：统筹本地KOL、媒体与高质量圈内人士，确保活动的人群精准度与影响力。",
+                    "全案落地：主导从场地格调把控、流程策划到现场执行的全流程，确保国际标准在本地的完美呈现。",
+                    "体验转译：尝试将晦涩的味觉体验转化为可视化的视觉语言，协助葡萄酒文化的传播。"
+                ]
+            },
+
+            // 4. 品牌顾问
+            {
+                id: "consultant",
+                period: "2020.09 - 2022.04",
+                company: "品牌顾问",
+                role: "品牌战略 / 基础架构",
+                tags: ["跨境电商", "餐饮", "从0到1"],
+                description: "为多家企业提供品牌战略与基础框架搭建。覆盖跨境电商、餐饮等多个行业，建立从底层洞察到落地执行的基础方法。",
+                
+                type: "gallery", 
+                mediaSrc: [
+                    "./images/consultant_1.jpg", 
+                    "./images/consultant_2.jpg"
+                ],
+
+                keyBattles: [
+                    "负责跨境电商品牌基础搭建（定位/VI/UI）。",
+                    "参与成熟品牌升级全案，优化用户体验设计。",
+                    "帮助初创品牌梳理叙事结构，为后续增长打下基础。"
+                ]
+            },
+
+            // 5. 牛排餐饮
+            {
+                id: "steakhouse",
+                period: "2018.05 - 2020.08",
+                company: "青岛赤火牛排餐饮管理公司",
+                role: "品牌总监",
+                tags: ["品牌重塑", "从0到1", "全链路管理"],
+                description: "参与10年老品牌重构，提出“让东方家庭随心享用的牛排餐厅”定位，提升品牌格调，以文化自信叙事重塑品牌。并从0到1参与建立粤菜新品牌。",
+                
+                type: "gallery", 
+                mediaSrc: [
+                    "./images/steak_1.jpg", 
+                    "./images/steak_2.jpg"
+                ],
+
+                keyBattles: [
+                    "助力品牌进入中高端商场体系，显著提升用户好感度与品牌溢价。",
+                    "建立东方家庭定位，创新“茶配牛排”的独特体验，形成差异化品牌符号。",
+                    "参与孵化高品质粤菜新品牌（木棉·小粤），从0到1建立框架并发展为跨省连锁。"
+                ]
+            },
+
+            // 6. 早期经历
+            {
+                id: "media",
+                period: "2013.08 - 2017.12",
+                company: "文化传媒 & 知名媒体",
+                role: "品牌总监 / 主编",
+                tags: ["内容策划", "结构化思考", "叙事表达"],
+                description: "从媒体主编到品牌总监的转型期。曾在杂志社担任主编，在凤凰网、中国网担任编辑，负责内容策划与编辑方向，之后转为品牌方向。",
+                
+                type: "none", 
+                keyBattles: [
+                    "负责品牌基础建设与定位探索，为后续系统能力奠定基础。",
+                    "培养了叙事表达、结构化思考与用户洞察能力。"
+                ]
+            }
+        ];
+
+        function renderWorks() {
+            const container = document.getElementById('works-container');
+            let html = '';
+
+            experiences.forEach((job, index) => {
+                let mediaHtml = '';
+
+                // 1. 三列布局重构 (AI Lab 专用)
+                if (job.type === 'split-showcase-v2') {
+                    mediaHtml = `
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8 items-stretch">
+                            
+                            <!-- Left: Video -->
+                            <div class="md:col-span-4 group/vid relative">
+                                <h4 class="text-xs font-bold mb-2 text-emerald-400 flex items-center gap-2">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> 
+                                    ${job.content.video.title}
+                                </h4>
+                                <a href="${job.content.video.link}" target="_blank" class="block relative media-container aspect-portrait-fixed overflow-hidden rounded-xl border border-white/10 hover:border-white/30 transition-colors">
+                                    <div class="media-blur-bg" style="background-image: url('${job.content.video.thumb}')"></div>
+                                    <img src="${job.content.video.thumb}" class="media-fit-contain hover-scale" onerror="this.src='https://via.placeholder.com/400x700/111/333?text=Vertical+Video'">
+                                    <div class="play-btn">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <!-- Center: Info Stack -->
+                            <div class="md:col-span-4 flex flex-col justify-center gap-6">
+                                
+                                <!-- Top Card: Stats -> Pointing Left -->
+                                <div class="glass-card p-6 relative group border-l-4 border-l-emerald-500/50">
+                                    <div class="absolute -left-3 top-1/2 -translate-y-1/2 text-emerald-400 arrow-left-anim hidden md:block">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12H4M4 12L10 18M4 12L10 6"/></svg>
+                                    </div>
+                                    <span class="stat-number text-4xl font-serif-main font-bold block mb-1">${job.stats.number}</span>
+                                    <span class="text-xs uppercase tracking-widest opacity-80 block">${job.stats.label}</span>
+                                    <span class="text-sm opacity-50 italic block mt-2">${job.stats.sub}</span>
+                                </div>
+
+                                <!-- Bottom Card: Concept -> Pointing Right -->
+                                <div class="glass-card p-6 relative group border-r-4 border-r-emerald-500/50 text-right">
+                                    <div class="absolute -right-3 top-1/2 -translate-y-1/2 text-emerald-400 arrow-right-anim hidden md:block">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12H20M20 12L14 6M20 12L14 18"/></svg>
+                                    </div>
+                                    <span class="text-emerald-300 font-serif-main text-xl italic block mb-1">Vibe Coding</span>
+                                    <span class="text-xs uppercase tracking-widest opacity-80 block">AI First App</span>
+                                    <span class="text-sm opacity-50 block mt-2">Zero-Code Development</span>
+                                </div>
+
+                            </div>
+
+                            <!-- Right: App -->
+                            <div class="md:col-span-4 group/app relative">
+                                <h4 class="text-xs font-bold mb-2 text-emerald-400 flex items-center justify-end gap-2">
+                                    ${job.content.app.title}
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                                </h4>
+                                <div class="media-container aspect-portrait-fixed overflow-hidden rounded-xl border border-white/10 bg-[#f0f0f5]">
+                                    <img src="${job.content.app.thumb}" class="hover-scale object-cover w-full h-full" onerror="this.src='https://via.placeholder.com/600x600/111/333?text=App+Screenshot'">
+                                </div>
+                            </div>
+
+                        </div>
+                    `;
+                }
+                // 2. Video Showcase
+                else if (job.type === 'video-showcase') {
+                    const mainVideo = job.videos[0];
+                    const getThumb = mainVideo.customThumb;
+                    
+                    const sideList = job.videos.slice(1).map((v) => `
+                        <a href="${v.link}" target="_blank" class="glass-card p-3 cursor-pointer hover:bg-white/10 transition-colors flex flex-col justify-center group/item">
+                            <div class="flex justify-between items-start">
+                                <span class="text-emerald-400 font-mono text-xs mb-1">▶ Watch</span>
+                                <span class="opacity-0 group-hover/item:opacity-100 text-emerald-400 text-xs transition-opacity">↗</span>
+                            </div>
+                            <h4 class="text-xs font-bold leading-tight mb-1 text-white">${v.title}</h4>
+                            <span class="text-[10px] opacity-50">${v.views}</span>
+                        </a>
+                    `).join('');
+
+                    mediaHtml = `
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8" id="video-box-${job.id}">
+                            <div class="lg:col-span-8">
+                                <h4 class="text-lg font-serif-main mb-3 text-white flex items-center gap-2">
+                                    <span class="text-emerald-400">▶</span> <span id="title-${job.id}">${mainVideo.title}</span>
+                                </h4>
+                                <a href="${mainVideo.link}" target="_blank" class="block group cursor-pointer relative">
+                                    <div class="media-container shadow-2xl aspect-video-fix" style="--bg-image: url('${getThumb}')">
+                                        <img src="${getThumb}" alt="Video Thumbnail" onerror="this.src='https://via.placeholder.com/1280x720/111/333?text=Video+Thumbnail'">
+                                        <div class="play-btn">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M8 5v14l11-7z"/></svg>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="lg:col-span-4 flex flex-col gap-4 mt-10">
+                                <div class="glass-card p-5 flex flex-col justify-center h-full min-h-[100px]">
+                                    <span class="stat-number text-5xl font-serif-main font-bold mb-1" id="stat-num-${job.id}">${mainVideo.views}</span>
+                                    <span class="text-xs uppercase tracking-widest opacity-50" id="stat-label-${job.id}">${mainVideo.label}</span>
+                                </div>
+                                <div class="grid grid-cols-2 lg:grid-cols-1 gap-2">
+                                    ${sideList}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } 
+                // 3. Gallery
+                else if (job.type === 'gallery') {
+                    mediaHtml = `
+                        <div class="relative w-full aspect-video-fix rounded-lg overflow-hidden border border-white/10 shadow-2xl mb-8 group gallery-container" 
+                             id="gallery-${job.id}"
+                             onmouseenter="pauseGallery('${job.id}')" 
+                             onmouseleave="resumeGallery('${job.id}')">
+                            <img src="${job.mediaSrc[0]}" id="img-${job.id}" data-index="0" class="w-full h-full object-cover transition-opacity duration-700 opacity-90" onerror="this.src='https://via.placeholder.com/1280x720/111/333?text=Image+Not+Found'">
+                            <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+                                ${job.mediaSrc.map((_, i) => `<div class="gallery-dot ${i===0?'active':''}" onclick="setGallery('${job.id}', ${i})" id="dot-${job.id}-${i}"></div>`).join('')}
+                            </div>
+                        </div>`;
+                    setTimeout(() => startAutoGallery(job.id, job.mediaSrc), 1000);
+                }
+                else if (job.type === 'image') {
+                    mediaHtml = `<div class="mb-8 rounded-lg overflow-hidden shadow-2xl border border-white/10 aspect-video-fix"><img src="${job.mediaSrc[0]}" class="w-full h-full object-cover opacity-90"></div>`;
+                }
+                else if (job.type === 'none') { mediaHtml = ''; }
+
+                let battlesHtml = '';
+                if (job.keyBattles) {
+                    battlesHtml = `<div class="bg-white/5 p-6 rounded-lg border border-white/5"><h4 class="text-xs uppercase tracking-widest opacity-40 mb-4">Strategic Impact</h4><ul class="space-y-2">${job.keyBattles.map(b => `<li class="flex items-start gap-3 text-sm opacity-80"><span class="text-emerald-500 mt-1">●</span><span>${b}</span></li>`).join('')}</ul></div>`;
+                }
+
+                html += `
+                    <article class="relative pl-8 md:pl-0 fade-in-up" style="animation-delay: ${index * 0.1}s">
+                        <div class="absolute left-0 top-0 bottom-0 w-[1px] bg-white/10 md:hidden"></div>
+                        <div class="absolute left-[-4px] top-2 w-2 h-2 rounded-full bg-emerald-500 md:hidden"></div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                            <div class="md:col-span-3 md:text-right pt-1 sticky top-24">
+                                <span class="font-mono text-xs text-emerald-300 block mb-1 opacity-80">${job.period}</span>
+                                <h3 class="text-lg font-serif-main leading-tight mb-2">${job.company}</h3>
+                                <p class="text-xs uppercase tracking-wider opacity-50 mb-4">${job.role}</p>
+                                <div class="flex flex-wrap md:justify-end gap-2 mb-4">
+                                    ${job.tags.map(t => `<span class="text-[10px] uppercase tracking-wider border border-white/20 px-2 py-1 rounded-full text-gray-400">${t}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div class="md:col-span-9">
+                                ${mediaHtml}
+                                <p class="text-base leading-relaxed opacity-90 mb-8 font-light border-l-2 border-white/10 pl-4 md:pl-0 md:border-none">
+                                    ${job.description}
+                                </p>
+                                ${battlesHtml}
+                            </div>
+                        </div>
+                    </article>
+                    <div class="w-full h-[1px] bg-white/5 my-16 md:hidden"></div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        const galleryTimers = {};
+        function startAutoGallery(id, images) {
+            if (galleryTimers[id]) clearInterval(galleryTimers[id]);
+            galleryTimers[id] = setInterval(() => {
+                const img = document.getElementById(`img-${id}`);
+                if(img) {
+                    let curr = parseInt(img.getAttribute('data-index'));
+                    let next = (curr + 1) % images.length;
+                    updateGalleryUI(id, next, images);
+                }
+            }, 3000);
+        }
+        function updateGalleryUI(id, index, images) {
+            const img = document.getElementById(`img-${id}`);
+            img.style.opacity = 0;
+            setTimeout(() => {
+                img.src = images[index];
+                img.setAttribute('data-index', index);
+                img.style.opacity = 0.9;
+                document.querySelectorAll(`#gallery-${id} .gallery-dot`).forEach((d, i) => {
+                    d.classList.toggle('active', i === index);
+                });
+            }, 300);
+        }
+        function setGallery(id, index) {
+            const job = experiences.find(j => j.id === id);
+            updateGalleryUI(id, index, job.mediaSrc);
+            startAutoGallery(id, job.mediaSrc);
+        }
+        function pauseGallery(id) { clearInterval(galleryTimers[id]); }
+        function resumeGallery(id) { const job = experiences.find(j => j.id === id); startAutoGallery(id, job.mediaSrc); }
+
+        const canvas = document.getElementById('aurora-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, orbs = [];
+        const colors = [
+            '#1d4ed8', // Deep Blue
+            '#3b82f6', // Bright Blue
+            '#10b981', // Emerald Green
+            '#facc15', // Sunlight Yellow
+            '#fbbf24'  // Amber
+        ];
+
+        function resize() {
+            width = window.innerWidth; height = window.innerHeight;
+            canvas.width = width; canvas.height = height;
+            orbs = Array.from({ length: 6 }, () => ({
+                x: Math.random() * width, y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
+                r: Math.min(width, height) * 0.5,
+                color: colors[Math.floor(Math.random() * colors.length)]
+            }));
+        }
+        function animate() {
+            ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, width, height);
+            orbs.forEach(orb => {
+                orb.x += orb.vx; orb.y += orb.vy;
+                if(orb.x < -orb.r/2 || orb.x > width+orb.r/2) orb.vx *= -1;
+                if(orb.y < -orb.r/2 || orb.y > height+orb.r/2) orb.vy *= -1;
+                const g = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.r);
+                g.addColorStop(0, orb.color); g.addColorStop(1, 'transparent');
+                ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = g;
+                ctx.beginPath(); ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI*2); ctx.fill();
+            });
+            ctx.globalCompositeOperation = 'source-over';
+            requestAnimationFrame(animate);
+        }
+        window.addEventListener('resize', resize);
+        
+        resize();
+        animate();
+        renderWorks();
+    </script>
+</body>
+</html>
