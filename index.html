@@ -192,7 +192,8 @@
         <header class="min-h-screen flex flex-col justify-center items-start pt-20">
             <div class="fade-in-up">
                 <p class="text-xs md:text-sm tracking-[0.3em] uppercase opacity-50 mb-6 text-emerald-300">Manifesto</p>
-                <h1 class="font-serif-main text-5xl md:text-7xl leading-tight mb-8">
+                <!-- 修复1：手机端字号缩小为 text-4xl，防止换行拥挤 -->
+                <h1 class="font-serif-main text-4xl md:text-7xl leading-tight mb-8">
                     AI将重构世界，<br>
                     <span class="italic text-gray-400">而我将构建AI的灵魂。</span>
                 </h1>
@@ -208,7 +209,7 @@
 
         <!-- 1 | 我是谁 -->
         <section class="py-24 border-t border-white/5">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
                 <div class="md:col-span-4 fade-in-up">
                     <div class="aspect-[3/4] rounded-sm overflow-hidden relative group portrait-frame bg-[#111]">
                         <!-- 你的头像 -->
@@ -268,7 +269,7 @@
             </div>
         </section>
 
-        <!-- 3 | 优势 (更新：统一横线样式 + 底部标签) -->
+        <!-- 3 | 优势 -->
         <section class="py-24 border-t border-white/5">
             <div class="mb-12 fade-in-up">
                 <span class="text-xs tracking-[0.2em] uppercase opacity-40 block mb-2">Superpowers</span>
@@ -320,13 +321,13 @@
                 </div>
             </div>
 
-            <!-- 新增：底层元能力标签 -->
+            <!-- 底层元能力标签 -->
             <div class="flex flex-wrap gap-4 text-xs font-mono opacity-50 fade-in-up" style="animation-delay: 0.4s">
                 <span class="flex items-center gap-2 px-3 py-1 border border-white/10 rounded-full hover:bg-white/5 transition-colors cursor-default">
-                    <span class="text-emerald-500">#</span> 跨行业整合 (媒体/餐饮/游戏/AI)
+                    <span class="text-emerald-500">#</span> 跨行业能力 (媒体/餐饮/游戏/AI)
                 </span>
                 <span class="flex items-center gap-2 px-3 py-1 border border-white/10 rounded-full hover:bg-white/5 transition-colors cursor-default">
-                    <span class="text-emerald-500">#</span> 终生学习者 (心理学/系统思维/艺术/哲学/AI)
+                    <span class="text-emerald-500">#</span> 终生学习者 (心理学/系统思维/艺术/哲学/历史/AI)
                 </span>
                 <span class="flex items-center gap-2 px-3 py-1 border border-white/10 rounded-full hover:bg-white/5 transition-colors cursor-default">
                     <span class="text-emerald-500">#</span> 高压推进与决策能力
@@ -352,7 +353,7 @@
                 " The best way to predict the future<br>is to <span class="italic text-emerald-300">design</span> it. "
             </h2>
             <p class="opacity-60 font-light max-w-xl fade-in-up delay-100">
-                我正在寻找一个相信“技术应有温度”的团队，<br>期待与您共同定义AI时代的品牌范式。
+                我正在寻找一个相信“技术有温度”的团队，<br>期待与您共建能真正帮助人们的AI品牌。
             </p>
         </section>
 
@@ -422,7 +423,7 @@
         }
 
         const experiences = [
-            // 1. AI 独立创作者 (三列布局)
+            // 1. AI 独立创作者
             {
                 id: "ai-lab",
                 period: "2025.05 - Present",
@@ -717,7 +718,10 @@
                         <div class="absolute left-[-4px] top-2 w-2 h-2 rounded-full bg-emerald-500 md:hidden"></div>
 
                         <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-                            <div class="md:col-span-3 md:text-right pt-1 sticky top-24">
+                            
+                            <!-- 修复2：核心修改处。将 sticky 改为 md:sticky。-->
+                            <!-- 之前在手机上 sticky 会导致标题吸附在顶部，内容文字从下方穿过造成重叠。-->
+                            <div class="md:col-span-3 md:text-right pt-1 md:sticky md:top-24">
                                 <span class="font-mono text-xs text-emerald-300 block mb-1 opacity-80">${job.period}</span>
                                 <h3 class="text-lg font-serif-main leading-tight mb-2">${job.company}</h3>
                                 <p class="text-xs uppercase tracking-wider opacity-50 mb-4">${job.role}</p>
@@ -725,6 +729,7 @@
                                     ${job.tags.map(t => `<span class="text-[10px] uppercase tracking-wider border border-white/20 px-2 py-1 rounded-full text-gray-400">${t}</span>`).join('')}
                                 </div>
                             </div>
+
                             <div class="md:col-span-9">
                                 ${mediaHtml}
                                 <p class="text-base leading-relaxed opacity-90 mb-8 font-light border-l-2 border-white/10 pl-4 md:pl-0 md:border-none">
