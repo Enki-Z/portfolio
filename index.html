@@ -183,7 +183,7 @@
         <div class="text-xs tracking-[0.2em] uppercase font-bold text-emerald-300">Yiting / Portfolio</div>
         
         <div class="relative group cursor-pointer">
-            <a href="javascript:void(0)" onclick="navigator.clipboard.writeText('enki-zero'); alert('微信号已复制到剪贴板')" class="text-xs tracking-[0.1em] hover:text-emerald-300 transition-colors flex items-center gap-2">
+            <a href="javascript:void(0)" onclick="navigator.clipboard.writeText('enki-zero');" class="text-xs tracking-[0.1em] hover:text-emerald-300 transition-colors flex items-center gap-2">
                 <span class="opacity-70 group-hover:opacity-100">WeChat:</span>
                 <span class="font-bold border-b border-white/20 group-hover:border-emerald-300 pb-0.5">enki-zero</span>
             </a>
@@ -205,7 +205,6 @@
                         Manifesto
                     </p>
                     
-                    <!-- 修改1：移除了紧凑字距 tracking-tight，加入了更舒展的 tracking-wider -->
                     <h1 class="font-serif-main text-5xl md:text-6xl lg:text-7xl leading-tight mb-6 tracking-wider lg:whitespace-nowrap">
                         万物皆有灵，<br class="hidden md:block">
                         AI 亦有心。
@@ -260,7 +259,6 @@
                     </div>
                 </div>
                 
-                <!-- 修改2：通过加入 md:pl-12 lg:pl-16，为右侧文本容器增加了左侧留白（负空间），修正视觉失衡 -->
                 <div class="md:col-span-8 fade-in-up md:pl-12 lg:pl-16" style="animation-delay: 0.1s">
                     <h2 class="font-serif-main text-3xl md:text-4xl mb-8">我是 一亭Enki。<br><span class="text-emerald-300/80 text-2xl italic">一个实干的理想主义者。</span></h2>
                     
@@ -299,7 +297,7 @@
                     <p class="text-xs opacity-60 leading-relaxed flex-grow">
                         曾与《原神》等头部游戏IP长期合作PGC、PUGC高质量内容制作，多个作品获百万级播放，最高的达750万+播放，已形成自己的方法论。
                         <br><br>
-                        </span>
+                        
                     </p>
                 </div>
 
@@ -311,7 +309,7 @@
                     <p class="text-xs opacity-60 leading-relaxed flex-grow">
                         我负责内容的全链条管理，担任策划、编剧、导演，统筹专业内容创作团队，从0到1推动项目落地，懂得用故事与用户形成情感链接。
                         <br><br>
-                        </span>
+                        
                     </p>
                 </div>
 
@@ -323,7 +321,7 @@
                     <p class="text-xs opacity-60 leading-relaxed flex-grow">
                         为众多游戏IP提供过海外达人营销、创作者生态、IP联名等。
                         <br><br>
-                        </span>
+                        
                     </p>
                 </div>
             </div>
@@ -414,7 +412,6 @@
                         <div class="w-3 h-3 rounded-full bg-[#050505] border-2 border-emerald-400/50 mb-7 group-hover:scale-150 group-hover:bg-emerald-400 group-hover:border-emerald-400 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.5)] transition-all duration-300"></div>
                         <div class="glass-card rounded-2xl p-4 text-center w-full transition-all duration-300 group-hover:bg-emerald-900/20 group-hover:border-emerald-500/30 group-hover:translate-y-1">
                             <div class="text-sm font-medium whitespace-nowrap mb-1">学习AI和心理学</div>
-                            <!-- 修改3：移除了占位符的透明属性，替换为真实的里程碑文案 -->
                             <div class="text-xs text-emerald-400/80 whitespace-nowrap">内容创作者</div>
                         </div>
                     </div>
@@ -516,39 +513,7 @@
         }
 
         const experiences = [
-            // 0. AI 独立创作者 (三列布局)
-            {
-                id: "ai-lab",
-                period: "2025.05 - Present",
-                company: "学习AI和心理学",
-                role: "内容创作者",
-                tags: ["爆款内容", "官媒认可", "AI探索"],
-                description: "以个人身份进行AI探索，短视频获得众多官媒转载；vibe coding了自用APP和这个网站；思考了前路，认为AI陪伴是我值得进入的领域。",
-                
-                type: "split-showcase-v2", 
-                stats: { number: "10万+", label: "总点赞数", sub: "数百万播放 " },
-                
-                content: {
-                    video: {
-                        title: "百万播放AI短视频",
-                        thumb: "./images/viral_video_cover.jpg", 
-                        link: "http://xhslink.com/o/6Ksgobxx9fz"
-                    },
-                    app: {
-                        title: "防久坐闹钟 App",
-                        thumb: "./images/app_screenshot.jpg", 
-                        link: null
-                    }
-                },
-
-                keyBattles: [
-                    "内容为王：创作的AI短视频获得新华社快看、凤凰网国际、中国日报等官媒转载，获近10万点赞，数百万播放和大量好评，验证了直抵人心的内容具有天然传播力。（10月初随手制作，当时的sora2像素很低）",
-                    "动手实践：零代码开发了一款健康类App，还有个人网站，跑通了“需求-代码-部署”的个人开发全流程。",
-                    "认知与思考：这期间增强了我AI将对全社会带来变革的认知，以及我个人渴望投入其中的想法。"
-                ]
-            },
-            
-            // 1. 日本经历
+            // 把【日本经历】调到数组第一位（索引0）
             {
                 id: "japan",
                 period: "2022.04 - 2025.05",
@@ -594,8 +559,40 @@
                     "Owner精神：在团队危机时刻主动补位，通过数月的布局挽回大客户信任，确保业务延续。" 
                 ]
             },
+            
+            // 把【AI 独立创作者】调到第二位（索引1）
+            {
+                id: "ai-lab",
+                period: "2025.05 - Present",
+                company: "学习AI和心理学",
+                role: "内容创作者",
+                tags: ["爆款内容", "官媒认可", "AI探索"],
+                description: "以个人身份进行AI探索，短视频获得众多官媒转载；vibe coding了自用APP和这个网站；思考了前路，认为AI陪伴是我值得进入的领域。",
+                
+                type: "split-showcase-v2", 
+                stats: { number: "10万+", label: "总点赞数", sub: "数百万播放" },
+                
+                content: {
+                    video: {
+                        title: "百万播放AI短视频",
+                        thumb: "./images/viral_video_cover.jpg", 
+                        link: "http://xhslink.com/o/6Ksgobxx9fz"
+                    },
+                    app: {
+                        title: "防久坐闹钟 App",
+                        thumb: "./images/app_screenshot.jpg", 
+                        link: null
+                    }
+                },
 
-            // 2. 品牌顾问
+                keyBattles: [
+                    "内容为王：创作的AI短视频获得新华社快看、凤凰网国际、中国日报等官媒转载，获近10万点赞，数百万播放和大量好评，验证了直抵人心的内容具有天然传播力。（10月初随手制作，当时的sora2像素很低）",
+                    "动手实践：零代码开发了一款健康类App，还有个人网站，跑通了“需求-代码-部署”的个人开发全流程。",
+                    "认知与思考：这期间增强了我AI将对全社会带来变革的认知，以及我个人渴望投入其中的想法。"
+                ]
+            },
+
+            // 3. 品牌顾问
             {
                 id: "consultant",
                 period: "2020.09 - 2022.04",
@@ -615,26 +612,6 @@
                     "高端粤菜: 0-1，参与某高端粤菜的品牌搭建，包括定位、文化内核、VI、部分线下视觉等。",
                     "精致茶饮: 0-1，参与某山里的精致茶饮&餐饮品牌品牌搭建，包括定位、文化内核。",
                     "中高端餐饮: 1-10，为其他多个中高端餐饮提供品牌升级服务，优化用户体验。"
-                ]
-            },
-
-            // 3. 葡萄酒贸易
-            {
-                id: "wine",
-                period: "2014 - 2019",
-                company: "全球多家国际葡萄酒机构",
-                role: "B2B PR / 合作伙伴",
-                tags: ["资源整合", "生活方式", "活动策划"],
-                description: "作为新西兰贸发局、法国香槟协会、德国葡萄酒协会等机构的本地化合作伙伴，策划并落地多场商业品鉴会与媒体活动，构建从贸易端到消费端的文化桥梁。",
-                
-                type: "gallery", 
-                mediaSrc: [
-                    "./images/wine_1.jpg", 
-                    "./images/wine_2.jpg"
-                ],
-                keyBattles: [
-                    "精准邀约：统筹本地KOL、媒体与圈内人士，确保活动的人群精准度。",
-                    "全案落地：主导场地格调把控、流程策划到现场执行，确保国际标准呈现。",
                 ]
             },
 
@@ -752,6 +729,49 @@
                             </div>
                         </div>`;
                     setTimeout(() => startAutoGallery(job.id, job.mediaSrc), 1000);
+                    
+                /* --- 修改核心：补全了对 split-showcase-v2 类型的支持逻辑 --- */
+                } else if (job.type === 'split-showcase-v2') {
+                    const c = job.content;
+                    const s = job.stats;
+                    mediaHtml = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                            <!-- 左侧：视频区域 -->
+                            <div class="flex flex-col gap-2">
+                                <h4 class="text-sm font-serif-main text-white flex items-center gap-2 mb-1">
+                                    <span class="text-emerald-400">▶</span> <span>${c.video.title}</span>
+                                </h4>
+                                <a href="${c.video.link}" target="_blank" class="block group cursor-pointer relative flex-grow">
+                                    <div class="media-container shadow-2xl aspect-video-fix h-full" style="--bg-image: url('${c.video.thumb}')">
+                                        <img src="${c.video.thumb}" alt="Video Thumbnail" onerror="this.src='https://via.placeholder.com/640x360/111/333?text=Video+Thumbnail'">
+                                        <div class="play-btn">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M8 5v14l11-7z"/></svg>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- 右侧：数据卡片与App截图 -->
+                            <div class="flex flex-col gap-4">
+                                <div class="glass-card p-5 flex flex-col justify-center relative overflow-hidden border-emerald-500/20 bg-emerald-500/5">
+                                    <div class="absolute -right-5 -top-5 w-24 h-24 bg-emerald-500/20 rounded-full blur-xl"></div>
+                                    <span class="stat-number text-3xl font-serif-main font-bold mb-1">${s.number}</span>
+                                    <span class="text-[10px] uppercase tracking-widest opacity-60">${s.label} · <span class="text-emerald-400">${s.sub}</span></span>
+                                </div>
+                                <div class="flex flex-col gap-2 flex-grow">
+                                    <h4 class="text-sm font-serif-main text-white flex items-center gap-2 mb-1">
+                                        <span class="text-emerald-400">■</span> <span>${c.app.title}</span>
+                                    </h4>
+                                    <!-- 设置了 min-height 并用 object-cover 适配不同比例的App图 -->
+                                    <div class="media-container shadow-2xl flex-grow" style="min-height: 160px;">
+                                        <img src="${c.app.thumb}" alt="App Screenshot" class="object-cover w-full h-full" onerror="this.src='https://via.placeholder.com/640x360/111/333?text=App+Screenshot'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                /* --- 修改结束 --- */
+
                 } else if (job.type === 'none') { mediaHtml = ''; }
 
                 let battlesHtml = '';
